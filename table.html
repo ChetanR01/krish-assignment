@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td button {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+
+        .modal button {
+            display: block;
+            margin: 10px auto; /* Center the buttons horizontally */
+            padding: 8px 16px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Customer List</h1>
+
+    <table id="customerTable">
+        <thead>
+            <tr>
+                <th>UUID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Street</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be added dynamically here -->
+        </tbody>
+    </table>
+
+    <!-- Modal HTML -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="editModal">
+        <label for="editInput">Edit Customer:</label>
+        <input type="text" id="editInput">
+        <button onclick="saveEdit()">Save</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+
+    <script>
+        const customerData = {
+            0: {uuid: 'test7c19737af7744423a0df23633177ddb2', first_name: 'Aryan', last_name: 'Raj', street: 'K 03, 1st Avenue, Gaur City-1', address: 'asd'},
+            1: {uuid: 'test8246c92aa58c4632bfefc754131d6e03', first_name: 'Jane', last_name: 'Doe', street: 'Elvnu Street', address: 'H no 2 '},
+            2: {uuid: 'test83c112cf16f6483888990e2fcbb831ed', first_name: 'Jane', last_name: 'Doe', street: 'ElvnuStreet', address: 'Hno2'},
+            3: {uuid: 'test87f5e13b1e484930b80288fc41e6b301', first_name: '', last_name: '', street: '', address: ''}
+        };
+
+        function addRowsToTable() {
+            const tableBody = document.querySelector('#customerTable tbody');
+
+            // Loop through the object and create a row for each customer
+            Object.keys(customerData).forEach(key => {
+                const data = customerData[key];
+
+                const row = document.createElement('tr');
+                row.dataset.uuid = data.uuid; // Store UUID as a data attribute
+
+                Object.keys(data).forEach(prop => {
+                    if (prop !== 'uuid') {
+                        const cell = document.createElement('td');
+                        cell.textContent = data[prop];
+                        row.appendChild(cell);
+                    }
+                });
+
+                // Add buttons to the last cell
+                const actionCell = document.createElement('td');
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', editCustomer);
+                actionCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', deleteCustomer);
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(actionCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Call the function to populate the table with rows
+        addRowsToTable();
+
+        // Rest of your existing script...
+
+        function editCustomer() {
+            const uuid = this.closest('tr').dataset.uuid;
+            // Implement your edit functionality using the UUID
+            console.log('Edit clicked for UUID:', uuid);
+        }
+
+        function deleteCustomer() {
+            const uuid = this.closest('tr').dataset.uuid;
+            // Implement your delete functionality using the UUID
+            console.log('Delete clicked for UUID:', uuid);
+        }
+
+
+    </script>
+
+</body>
+</html>

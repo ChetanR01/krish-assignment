@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td button {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Customer List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Email</th>
+                <th>Phone No</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Jane</td>
+                <td>Doe</td>
+                <td>Elvnu Street, H no 2</td>
+                <td>Delhi</td>
+                <td>Delhi</td>
+                <td>sam@gmail.com</td>
+                <td>12345678</td>
+                <td>
+                    <button onclick="editCustomer()">Edit</button>
+                    <button onclick="deleteCustomer()">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal HTML -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="editModal">
+        <label for="editInput">Edit Customer:</label>
+        <input type="text" id="editInput">
+        <button onclick="saveEdit()">Save</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+
+    <script>
+        function editCustomer() {
+            // Display the modal when "Edit" is clicked
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('editModal').style.display = 'block';
+
+            // Get the current value to edit
+            const currentValue = document.querySelector('td:first-child').innerText;
+            document.getElementById('editInput').value = currentValue;
+        }
+
+        function saveEdit() {
+            // Save the edited value and close the modal
+            const editedValue = document.getElementById('editInput').value;
+            alert('Customer edited. New value: ' + editedValue);
+
+            // Close the modal
+            closeModal();
+        }
+
+        function closeModal() {
+            // Hide the modal and overlay
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function deleteCustomer() {
+            alert('Delete clicked');
+        }
+    </script>
+
+</body>
+</html>
