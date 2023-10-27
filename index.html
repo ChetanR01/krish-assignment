@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration</title>
+</head>
+<body>
+
+    <h1>API Integration Example</h1>
+
+    <!-- Login Form -->
+    <form id="loginForm">
+        <label for="loginId">Login ID:</label>
+        <input type="text" id="loginId" name="loginId" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="button" onclick="authenticateUser()">Login</button>
+    </form>
+
+    <!-- Create Customer Form -->
+    <form id="createCustomerForm" style="display:none;">
+        <!-- Customer details inputs go here -->
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <br>
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" required>
+        <br>
+        <button type="button" onclick="createCustomer()">Create Customer</button>
+    </form>
+
+    <!-- Customer List -->
+    <div id="customerList" style="display:none;">
+        <h2>Customer List</h2>
+        <ul id="customerListUl"></ul>
+    </div>
+
+    <!-- Delete Customer Form -->
+    <form id="deleteCustomerForm" style="display:none;">
+        <label for="deleteUuid">Customer UUID to Delete:</label>
+        <input type="text" id="deleteUuid" name="deleteUuid" required>
+        <br>
+        <button type="button" onclick="deleteCustomer()">Delete Customer</button>
+    </form>
+
+    <!-- Update Customer Form -->
+    <form id="updateCustomerForm" style="display:none;">
+        <!-- Customer details inputs go here -->
+        <label for="updateUuid">Customer UUID to Update:</label>
+        <input type="text" id="updateUuid" name="updateUuid" required>
+        <br>
+        <button type="button" onclick="updateCustomer()">Update Customer</button>
+    </form>
+
+    <script>
+        let authToken;
+
+        function authenticateUser() {
+            const loginId = document.getElementById("loginId").value;
+            const password = document.getElementById("password").value;
+
+            // Make a POST request to authentication API
+            fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    login_id: loginId,
+                    password: password,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Authentication failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                authToken = data.access_token;
+                alert('Authentication successful. Token: ' + authToken);
+                console.log("DATA : ",data)
+                // Show/hide forms as needed
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("createCustomerForm").style.display = "block";
+                document.getElementById("customerList").style.display = "block";
+                document.getElementById("deleteCustomerForm").style.display = "block";
+                document.getElementById("updateCustomerForm").style.display = "block";
+            })
+            .catch(error => {
+                alert('Authentication failed. Please check your credentials.');
+            });
+        }
+
+        function createCustomer() {
+            // Get customer details from the form
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastname").value;
+            console.log("First Name:"+firstName+ " Last Name: "+lastName)
+            // ... (get other details)
+
+            // Make a POST request to create customer API
+            fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken,
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    // ... (other details)
+                }),
+            })
+            .then(response => {
+                if (response.status === 201) {
+                    alert('Customer created successfully');
+                } else if (response.status === 400) {
+                    alert('Failed to create customer. First Name or Last Name is missing.');
+                } else {
+                    throw new Error('Failed to create customer');
+                }
+            })
+            .catch(error => {
+                alert('Error creating customer');
+            });
+        }
+
+        // Similar functions for getCustomerList, deleteCustomer, and updateCustomer
+
+    </script>
+
+</body>
+</html>
